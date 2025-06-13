@@ -20,7 +20,7 @@ const Projects = [
         image: "/projects/pj-2/a-laravel.png",
         tags: ["Laravel", "Tailwindcss", "MySQL", "Livewire", "flux-ui"],
         demoUrl: "#",
-        githubUrl: "#",
+        githubUrl: "https://github.com/IsmeHim/laravel-auth-crud",
     },
     {
         id: 3,
@@ -85,7 +85,7 @@ export const ProjectsSection = () => {
                 </div>
 
                 <div className="mt-12 text-center">
-                    <a href="https:github.com/IsmeHim" target="_blank" className="cosmic-button w-fit mx-auto flex items-center gap-2">
+                    <a href="https://github.com/IsmeHim" target="_blank" className="cosmic-button w-fit mx-auto flex items-center gap-2">
                         Check my github <ArrowRight size={16}/>
                     </a>
                 </div>

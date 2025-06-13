@@ -108,13 +108,13 @@ export const ContactSection = () => {
                 Contact me <span className="text-pink-400">or</span> follow me
               </h3>
               <div className="flex space-x-4 justify-center">
-                <a href="#" target="_blank" rel="noopener noreferrer">
+                <a href="https://web.facebook.com/abdulraheem.jiteh?locale=th_TH" target="_blank" rel="noopener noreferrer">
                   <Facebook className="hover:text-pink-400 transition-colors duration-300" />
                 </a>
-                <a href="#" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.instagram.com/him.1i_/" target="_blank" rel="noopener noreferrer">
                   <Instagram className="hover:text-pink-400 transition-colors duration-300" />
                 </a>
-                <a href="#" target="_blank" rel="noopener noreferrer">
+                <a href="#" rel="noopener noreferrer">
                   <Twitter className="hover:text-pink-400 transition-colors duration-300" />
                 </a>
               </div>
