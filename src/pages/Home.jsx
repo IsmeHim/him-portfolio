@@ -1,4 +1,4 @@
-import { NavBar } from "../components/NavBar";
+import { NavBar } from "../components/Navbar";
 import { StarBackground } from "../components/StarBakground";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { HeroSection } from "@/components/HeroSection";
