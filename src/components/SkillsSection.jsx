@@ -3,93 +3,34 @@ import { cn } from "../lib/utils";
 import "aos/dist/aos.css"; // Import AOS styles if you are using AOS for animations
 import AOS from "aos"; // Import AOS for animations
 import { useEffect } from "react";
-
-const skills = [
-    { 
-        name: "HTML",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
-        href: "https://developer.mozilla.org/en-US/docs/Glossary/HTML5",
-        category: ["Frontend"],
-    },
-    { 
-        name: "CSS",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
-        href: "https://developer.mozilla.org/en-US/docs/Web/CSS",
-        category: ["Frontend"],
-    },
-    { 
-        name: "JavaScript",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
-        href: "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
-        category: ["Frontend", "Learning"],
-    },
-    { 
-        name: "React",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
-        href: "https://reactjs.org/",
-        category: ["Frontend", "Learning"],
-    },
-    { 
-        name: "Tailwind CSS",
-        icon: "https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/tailwindcss-colored.svg",
-        href: "https://tailwindcss.com/",
-        category: ["Frontend"],
-    },
-    { 
-        name: "Bootstrap",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg",
-        href: "https://getbootstrap.com/",
-        category: ["Frontend"],
-    },
-    {
-        name: "PHP",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg",
-        href: "https://www.php.net/",
-        category: ["Backend"],
-    },
-    {
-        name: "MySQL",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
-        href: "https://www.mysql.com/",
-        category: ["Backend"],
-    },
-    {
-        name: "Laravel",
-        icon: "https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/laravel-colored.svg",
-        href: "https://laravel.com/",
-        category: ["Backend"],
-    },
-    {
-        name: "Flutter",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg",
-        href: "https://flutter.dev/",
-        category: ["Mobile"],
-    },
-    { 
-        name: "Git",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
-        href: "https://git-scm.com/",
-        category: ["Tools"],
-    },
-    {
-        name: "Linux",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg",
-        href: "https://www.linux.org/",
-        category: ["Tools"],
-    },
-
-];
+import { api } from "../lib/api";
 
 const categories = ["all","Frontend", "Backend", "Mobile", "Tools", "Learning"];
 
 export const SkillsSection = () => {
+
+    const [skills, setSkills] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [activeCategory, setActiveCategory] = useState("all");
 
-    const filteredSkills = skills.filter(skill => activeCategory === "all" || skill.category.includes(activeCategory));
+    const fetchSkills = async () => {
+        try {
+            const res = await api.get("/skills");
+            setSkills(res.data.skills);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching skills:", error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     useEffect(() => {
+        fetchSkills();
         AOS.init({ duration: 1000 }); // ความเร็วในการแสดง (ms)  ค่า default (ถ้าไม่มีใน element)
     }, []);
+
+    const filteredSkills = skills.filter(skill => activeCategory === "all" || skill.categories.includes(activeCategory));
 
     return (
         <section id="skills" className="py-24 px-4 relative bg-secondary/30">
@@ -97,6 +38,14 @@ export const SkillsSection = () => {
                 <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
                     My <span className="text-primary">Skills</span>
                 </h2>
+
+                {
+                    loading && (
+                        <div className="flex justify-center items-center mb-12">
+                            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary"></div>
+                        </div>
+                    )
+                }
 
                 <div className="flex flex-wrap justify-center mb-12 gap-4">
                     {categories.map((category, key) => (

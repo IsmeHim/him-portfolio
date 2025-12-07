@@ -2,43 +2,59 @@ import { ArrowRight, ExternalLink, Github } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect, useState } from "react";
+import { api } from "../lib/api";
 
-const Projects = [
-    {
-        id: 1,
-        title: "Coffee POS",
-        description: "เป็นโปรเจคระบบจัดการร้านกาแฟและระบบจัดการพนักงาน.",
-        image: "/projects/pj-1/2.png",
-        tags: ["Laravel", "Bootstrap", "MySQL","sweetalert2"],
-        demoUrl: "#",
-        githubUrl: "#",
-    },
-    {
-        id: 2,
-        title: "Auth and crud",
-        description: "โปรเจคนี้เป็นโประเจคระบบ crud ที่ผมลองใช้ ระบบ Auth ของ laravel 12 ผมลองใช้ Livewire Starter kit และผมไปการล็อกอินทำให้สามารถล้อกอินโดยใช็ Username ได้ด้วยและเพิ่ม role แยกหน้าสำหรับ admin และ user.",
-        image: "/projects/pj-2/a-laravel.png",
-        tags: ["Laravel", "Tailwindcss", "MySQL", "Livewire", "flux-ui"],
-        demoUrl: "#",
-        githubUrl: "https://github.com/IsmeHim/laravel-auth-crud",
-    },
-    {
-        id: 3,
-        title: "Flutter with API",
-        description: "โปรเจกต์นี้เป็นแอปพลิเคชันสำหรับจัดการรายการภาพยนตร์ (CRUD) ที่ผมพัฒนาขึ้นในช่วงเรียนมหาลัยปี 2 เพื่อส่งอาจารย์ โดยใช้ Flutter และเชื่อมต่อกับ RESTful API ที่เขียนด้วย PHP เพื่อจัดการข้อมูล ซึ่งข้อมูลทั้งหมดถูกจัดเก็บใน ฐานข้อมูล MySQL ฟีเจอร์หลักของแอปประกอบด้วย: การเพิ่ม, ลบ, แก้ไข และค้นหาภาพยนตร์,หน้ารวมทั้งหมด 10 หน้า",
-        image: "/projects/pj-3/Flutter-movie.png",
-        tags: ["Flutter", "Dart", "PHP", "API", "MySQL"],
-        demoUrl: "#",
-        githubUrl: "https://github.com/IsmeHim/flutter_movie_API/tree/main",
-    },
-];
+// const Projects = [
+//     {
+//         id: 1,
+//         title: "Coffee POS",
+//         description: "เป็นโปรเจคระบบจัดการร้านกาแฟและระบบจัดการพนักงาน.",
+//         image: "/projects/pj-1/2.png",
+//         tags: ["Laravel", "Bootstrap", "MySQL","sweetalert2"],
+//         demoUrl: "#",
+//         githubUrl: "#",
+//     },
+//     {
+//         id: 2,
+//         title: "Auth and crud",
+//         description: "โปรเจคนี้เป็นโประเจคระบบ crud ที่ผมลองใช้ ระบบ Auth ของ laravel 12 ผมลองใช้ Livewire Starter kit และผมไปการล็อกอินทำให้สามารถล้อกอินโดยใช็ Username ได้ด้วยและเพิ่ม role แยกหน้าสำหรับ admin และ user.",
+//         image: "/projects/pj-2/a-laravel.png",
+//         tags: ["Laravel", "Tailwindcss", "MySQL", "Livewire", "flux-ui"],
+//         demoUrl: "#",
+//         githubUrl: "https://github.com/IsmeHim/laravel-auth-crud",
+//     },
+//     {
+//         id: 3,
+//         title: "Flutter with API",
+//         description: "โปรเจกต์นี้เป็นแอปพลิเคชันสำหรับจัดการรายการภาพยนตร์ (CRUD) ที่ผมพัฒนาขึ้นในช่วงเรียนมหาลัยปี 2 เพื่อส่งอาจารย์ โดยใช้ Flutter และเชื่อมต่อกับ RESTful API ที่เขียนด้วย PHP เพื่อจัดการข้อมูล ซึ่งข้อมูลทั้งหมดถูกจัดเก็บใน ฐานข้อมูล MySQL ฟีเจอร์หลักของแอปประกอบด้วย: การเพิ่ม, ลบ, แก้ไข และค้นหาภาพยนตร์,หน้ารวมทั้งหมด 10 หน้า",
+//         image: "/projects/pj-3/Flutter-movie.png",
+//         tags: ["Flutter", "Dart", "PHP", "API", "MySQL"],
+//         demoUrl: "#",
+//         githubUrl: "https://github.com/IsmeHim/flutter_movie_API/tree/main",
+//     },
+// ];
 
 export const ProjectsSection = () => {
 
     const [show, setShow] = useState(true);
+    const [Projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchProjects = async () => {
+        try {
+            const res = await api.get("/performances");
+            setProjects(res.data.performances);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching projects:", error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     //use aos for animation
     useEffect(() => {
+        fetchProjects();
         AOS.init({ duration: 1000 }); // ความเร็วในการแสดง (ms)  ค่า default (ถ้าไม่มีใน element)
     }, []);
 
@@ -50,13 +66,21 @@ export const ProjectsSection = () => {
                     Here are some of my recent projects that showcase my skills and expertise in web development.
                 </p>
                 <button onClick={()=>setShow(!show)} className="cosmic-outline-button mb-12">{show ? "ซ่อนรายละเอียด": "แสดงรายละเอียด"}</button>
+
+                {
+                    loading && (
+                        <div className="flex justify-center items-center mb-12">
+                            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary"></div>
+                        </div>
+                    )
+                }
                 
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {Projects.map((project, key) => (
                         <div key={key} className="group bg-card rounded-lg shadow-lg overflow-hidden card-hover" data-aos="fade-up" data-aos-duration="2000">
                             <div className="h-48 overflow-hidden">
-                                <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                             </div>
                             <div className="p-6">
                                 <div className="flex flex-wrap gap-2 mb-1">
